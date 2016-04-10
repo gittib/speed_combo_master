@@ -1,0 +1,219 @@
+.handle {
+    max-width: 260px;
+    margin: 0 auto;
+
+    select {
+        background: #FFFDF4;
+        border: 2px solid #D2BA85;
+        border-radius: 5px;
+        color: #0C2245;
+        font-size: 14px;
+        height: 30px;
+        line-height: 30px;
+        text-align: left;
+        text-indent: 5px;
+        vertical-align: middle;
+        width: 140px;
+    }
+
+    button {
+        /* 文字の太さをboldに指定 */
+        font-weight: bold;
+     
+        /* 縦方向に10px、
+         * 横方向に30pxの余白を指定 */
+        padding: 3px 30px;
+        margin: 10px 3px;
+     
+        /* 文字色を白色に指定 */
+        color: #fff;
+
+        // 背景色
+        background-color: rgb(192, 192, 192);
+     
+        /* ボーダーをなくす */
+        border-style: none;
+     
+        /* ボタンの影の指定
+         * 影の横幅を2px
+         * 縦長を2px
+         * ぼかしを3px
+         * 広がりを1px
+         * 色を#666（グレー）に指定 */
+        $boxShadow: 2px 2px 3px 1px #666;
+        box-shadow: $boxShadow;
+        -moz-box-shadow: $boxShadow;
+        -webkit-box-shadow: $boxShadow;
+     
+        /* テキストの影の指定
+         * 影の横幅を1px
+         * 縦長を1px
+         * ぼかしを2px
+         * 色を#000（黒）に指定 */
+        text-shadow: 1px 1px 2px #000;
+     
+        /* 角丸の指定 */
+        $kadomaru: 5px;
+        -moz-border-radius: $kadomaru;
+        -webkit-border-radius: $kadomaru;
+        border-radius: $kadomaru;
+     
+        &:hover {
+            /* 透明度を20%に指定 */
+            opacity: 0.8;
+        }
+
+        &.undo {
+            background-color: rgb(255, 127, 127);
+        }
+
+        &.redo {
+            background-color: rgb(127, 127, 255);
+        }
+
+        &.invalid {
+            background-color: rgb(95, 95, 95);
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+#game_board {
+    $card_width: 150px;
+    $card_margin: 3px;
+    $card_border: 3px;
+
+    $colum_width: $card_width + $card_border*2 + $card_border*2 + 5;
+    $display_width_threshold : $colum_width * 5;
+
+    width: 100%;
+    margin: 0 auto;
+    @for $i from 2 through 10 {
+        @media screen and(min-width: $colum_width * $i + 1) and(max-width: $colum_width * ($i+1)) {
+            max-width: $colum_width * $i;
+        }
+    }
+
+    .chara_set {
+        margin: 15px auto;
+
+        .card_list {
+            .arts_card {
+                float: left;
+                border: solid black;
+                border-width: $card_border;
+                margin: $card_margin;
+                position: relative;
+                overflow: hidden;
+                height: 200px;
+                width: $card_width;
+                transition: .3s;
+                @media screen and(max-width: $display_width_threshold) {
+                    height: initial;
+                }
+
+                &.hide {
+                    height: 0;
+                    width: 0;
+                    margin: 0;
+                    border-width: 0;
+                }
+
+                img.main {
+                    @media screen and(max-width: $display_width_threshold) {
+                        display: none;
+                    }
+                }
+
+                .summary_info {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 2px;
+                    text-align: right;
+                    background-color: cyan;
+                    font-weight: bold;
+                    @media screen and(max-width: $display_width_threshold) {
+                        position: static;
+                    }
+
+                    .name {
+                        font-weight: bold;
+                    }
+                    .count {
+                        font-weight: bold;
+                        font-size: 24px;
+                        text-align: left;
+                        float: left;
+                        margin-left: 6px;
+                    }
+                    .command {
+                        .arrow {
+                            $chara_size: 33px;
+
+                            display: inline-block;
+                            width:  $chara_size;
+                            height: $chara_size;
+                            margin-left: 1px;
+
+                            > span {
+                                display: inline-block;
+                                width:  $chara_size;
+                                height: $chara_size;
+                                border-radius: $chara_size;
+                                background-color: white;
+                                color: white;
+                                font-size: $chara_size;
+                                text-align: center;
+
+                                &.punch {
+                                    background-color: red;
+                                }
+                                &.kick {
+                                    background-color: blue;
+                                }
+                                &.glove {
+                                    background-color: green;
+                                }
+                                &.tackle {
+                                    background-color: yellow;
+                                    color: blue;
+                                }
+                            }
+
+                            > img {
+                                width:  $chara_size;
+                                height: $chara_size;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+table.combo_score {
+    margin: 6px auto;
+    border-style: outset;
+    border-color: lightgray;
+    background-color: azure;
+
+    th,td {
+        border-width: 3px;
+        border-style: inset;
+        padding: 3px;
+        text-align: center;
+        font-weight: bold;
+        width: 120px;
+    }
+}
+
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
