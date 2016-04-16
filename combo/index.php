@@ -134,7 +134,7 @@ foreach ($aArtCommand as $val) {
     }
     $sArtsHtml .= <<<_eos_
         <div class="arts_card">
-            <img class="main" src="./img/elf.png" />
+            <!-- <img class="main" src="./img/elf.png" /> -->
             <div class="summary_info">
                 <span class="name">{$val['name']}</span><br />
                 <span class="count">2</span>
