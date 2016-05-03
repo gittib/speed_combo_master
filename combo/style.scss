@@ -1,3 +1,67 @@
+button {
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 3px 30px;
+    margin: 10px 3px;
+
+    /* 文字色を白色に指定 */
+    color: #fff;
+
+    // 背景色
+    background-color: rgb(192, 192, 192);
+
+    /* ボーダーをなくす */
+    border-style: none;
+
+    /* ボタンの影の指定
+     * 影の横幅を2px
+     * 縦長を2px
+     * ぼかしを3px
+     * 広がりを1px
+     * 色を#666（グレー）に指定 */
+    $boxShadow: 2px 2px 3px 1px #666;
+    box-shadow: $boxShadow;
+    -moz-box-shadow: $boxShadow;
+    -webkit-box-shadow: $boxShadow;
+
+    /* テキストの影の指定
+     * 影の横幅を1px
+     * 縦長を1px
+     * ぼかしを2px
+     * 色を#000（黒）に指定 */
+    text-shadow: 1px 1px 2px #000;
+
+    /* 角丸の指定 */
+    $kadomaru: 5px;
+    -moz-border-radius: $kadomaru;
+    -webkit-border-radius: $kadomaru;
+    border-radius: $kadomaru;
+
+    &:hover {
+        /* 透明度を20%に指定 */
+        opacity: 0.8;
+    }
+
+    &.undo {
+        background-color: rgb(255, 127, 127);
+    }
+
+    &.redo {
+        background-color: rgb(127, 127, 255);
+    }
+
+    &.invalid {
+        background-color: rgb(95, 95, 95);
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
 .handle {
     max-width: 260px;
     margin: 0 auto;
@@ -14,70 +78,6 @@
         text-indent: 5px;
         vertical-align: middle;
         width: 140px;
-    }
-
-    button {
-        /* 文字の太さをboldに指定 */
-        font-weight: bold;
-     
-        /* 縦方向に10px、
-         * 横方向に30pxの余白を指定 */
-        padding: 3px 30px;
-        margin: 10px 3px;
-     
-        /* 文字色を白色に指定 */
-        color: #fff;
-
-        // 背景色
-        background-color: rgb(192, 192, 192);
-     
-        /* ボーダーをなくす */
-        border-style: none;
-     
-        /* ボタンの影の指定
-         * 影の横幅を2px
-         * 縦長を2px
-         * ぼかしを3px
-         * 広がりを1px
-         * 色を#666（グレー）に指定 */
-        $boxShadow: 2px 2px 3px 1px #666;
-        box-shadow: $boxShadow;
-        -moz-box-shadow: $boxShadow;
-        -webkit-box-shadow: $boxShadow;
-     
-        /* テキストの影の指定
-         * 影の横幅を1px
-         * 縦長を1px
-         * ぼかしを2px
-         * 色を#000（黒）に指定 */
-        text-shadow: 1px 1px 2px #000;
-     
-        /* 角丸の指定 */
-        $kadomaru: 5px;
-        -moz-border-radius: $kadomaru;
-        -webkit-border-radius: $kadomaru;
-        border-radius: $kadomaru;
-     
-        &:hover {
-            /* 透明度を20%に指定 */
-            opacity: 0.8;
-        }
-
-        &.undo {
-            background-color: rgb(255, 127, 127);
-        }
-
-        &.redo {
-            background-color: rgb(127, 127, 255);
-        }
-
-        &.invalid {
-            background-color: rgb(95, 95, 95);
-
-            &:hover {
-                opacity: 1;
-            }
-        }
     }
 }
 
@@ -114,6 +114,9 @@
                 @media screen and(max-width: $display_width_threshold) {
                     height: initial;
                 }
+                @media screen and(max-width: 330px) {
+                    width: 135px;
+                }
 
                 &.hide {
                     height: 0;
@@ -136,12 +139,20 @@
                     text-align: right;
                     background-color: cyan;
                     font-weight: bold;
+                    transition: .2s;
                     @media screen and(max-width: $display_width_threshold) {
                         position: static;
                     }
 
+                    &.used {
+                        background-color: gray;
+                    }
+
                     .name {
                         font-weight: bold;
+                        @media screen and(max-width: 330px) {
+                            font-size: 15px;
+                        }
                     }
                     .count {
                         font-weight: bold;
@@ -163,25 +174,11 @@
                                 display: inline-block;
                                 width:  $chara_size;
                                 height: $chara_size;
-                                border-radius: $chara_size;
-                                background-color: white;
-                                color: white;
-                                font-size: $chara_size;
+                                line-height: $chara_size;
+                                font-size: $chara_size - 1;
                                 text-align: center;
-
-                                &.punch {
-                                    background-color: red;
-                                }
-                                &.kick {
-                                    background-color: blue;
-                                }
-                                &.glove {
-                                    background-color: green;
-                                }
-                                &.tackle {
-                                    background-color: yellow;
-                                    color: blue;
-                                }
+                                border-radius: $chara_size;
+                                color: white;
                             }
 
                             > img {
@@ -192,6 +189,96 @@
                     }
                 }
             }
+        }
+    }
+}
+
+#command_input_console {
+    $chara_size: 33px;
+
+    margin-left: 1px;
+
+    #command_list {
+        $li_chara_size: 18px;
+
+        min-height: $li_chara_size;
+        border: inset 3px;
+        background-color: hsl(0, 0%, 85%);
+        padding: 6px;
+
+        > li {
+            list-style-type: none;
+            display: block;
+            float: left;
+            height: $li_chara_size;
+            width: $li_chara_size;
+            border-radius: $li_chara_size;
+            line-height: $li_chara_size;
+            font-size: $li_chara_size - 1;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        .placeholder {
+            font-size: 14px;
+            font-style: italic;
+            color: gray;
+        }
+    }
+
+    #combo_list {
+        background-color: gray;
+        overflow: hidden;
+        border: ridge 6px gold;
+        padding: 3px;
+        height: 0em;
+        transition: .2s;
+    }
+
+    #combo_damage {
+        font-weight: bold;
+
+        .damage_num {
+            color: red;
+        }
+    }
+
+    button {
+        width:  $chara_size;
+        height: $chara_size;
+        line-height: $chara_size;
+        font-size: $chara_size - 1;
+        text-align: center;
+        border-radius: $chara_size;
+        padding: 0;
+        margin: 10px;
+
+
+        &.open_combo_list {
+            float: right;
+            margin-top: -12px;
+            background-color: orange;
+            opacity: 0.1;
+            transition: .2s;
+        }
+
+        &.combo_start_button {
+            width: 80px;
+            font-size: 24px;
+            background-color: hsl(15,80%,50%);
+        }
+
+        &.delete_command_button {
+            width: 105px;
+            font-size: 24px;
+            background-color: hsl(250,100%, 70%);
+        }
+
+        &.delete_combo_button {
+            width: 110px;
+            font-size: 24px;
+            background-color: hsl(240, 100%, 33%);
         }
     }
 }
@@ -210,6 +297,48 @@ table.combo_score {
         font-weight: bold;
         width: 120px;
     }
+}
+
+.life_count_frame {
+    margin: 10px;
+
+    .life_count {
+        margin: 12px 0;
+
+        .life_bar {
+            height: 10px;
+            background: lightgray;
+            position: relative;
+            border: ridge 4px;
+
+            .remain {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                background-color: blue;
+
+                &.pinch {
+                    background-color: red;
+                }
+            }
+        }
+    }
+}
+
+.punch {
+    background-color: red;
+}
+.kick {
+    background-color: blue;
+}
+.glove {
+    background-color: green;
+}
+.tackle {
+    background-color: yellow;
+    color: blue !important;
 }
 
 .clearfix:after {

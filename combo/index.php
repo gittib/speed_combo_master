@@ -97,6 +97,7 @@ $aArtCommand = initArts();
 $sArtsHtml = '';
 foreach ($aArtCommand as $val) {
     $sCommand = '';
+    $sCommandData = '';
     $aCommand = str_split($val['command']);
     for ($j = 0 ; $j < count($aCommand) ; $j++) {
         $sCommand .='<span class="arrow">';
@@ -104,31 +105,23 @@ foreach ($aArtCommand as $val) {
         case '1':
             $sCommand .= '<img src="img/trump/spade.png" style="display:none" />';
             $sCommand .= '<span class="punch">P</span>';
+            $sCommandData .= 'P';
             break;
         case '2':
             $sCommand .= '<img src="img/trump/club.png" style="display:none" />';
             $sCommand .= '<span class="kick">K</span>';
+            $sCommandData .= 'K';
             break;
         case '3':
             $sCommand .= '<img src="img/trump/dia.png" style="display:none" />';
             $sCommand .= '<span class="glove">G</span>';
+            $sCommandData .= 'G';
             break;
         case '4':
             $sCommand .= '<img src="img/trump/heart.png" style="display:none" />';
             $sCommand .= '<span class="tackle">T</span>';
+            $sCommandData .= 'T';
             break;
-        // case '1':
-        //     $sCommand .= '<img src="img/arrow_up.png" />';
-        //     break;
-        // case '2':
-        //     $sCommand .= '<img src="img/arrow_down.png" />';
-        //     break;
-        // case '3':
-        //     $sCommand .= '<img src="img/arrow_right.png" />';
-        //     break;
-        // case '4':
-        //     $sCommand .= '<img src="img/arrow_left.png" />';
-        //     break;
         }
         $sCommand .='</span>';
     }
@@ -137,32 +130,27 @@ foreach ($aArtCommand as $val) {
             <!-- <img class="main" src="./img/elf.png" /> -->
             <div class="summary_info">
                 <span class="name">{$val['name']}</span><br />
-                <span class="count">2</span>
-                <span class="command">{$sCommand}</span>
+                <!-- <span class="count">2</span> -->
+                <span class="command" data-command="{$sCommandData}">{$sCommand}</span>
             </div>
         </div>
 
 _eos_;
 }
 
-$aScore = array(
-    array('combo'   => '1以下', 'damage'    => 0),
-    array('combo'   => '2',     'damage'    => 1),
-    array('combo'   => '3',     'damage'    => 2),
-    array('combo'   => '4',     'damage'    => 3),
-    array('combo'   => '5',     'damage'    => 5),
-    array('combo'   => '6',     'damage'    => 7),
-    array('combo'   => '7',     'damage'    => 10),
-    array('combo'   => '8',     'damage'    => 13),
-    array('combo'   => '9',     'damage'    => 16),
-    array('combo'   => '10以上','damage'    => 20),
-);
-$sScoreHtml = '';
-$iColor = 216;
-foreach ($aScore as $val) {
-    $sScoreHtml .= "<tr style='background-color:hsl({$iColor}, 50%, 75%);'><td>{$val['combo']}</td><td>{$val['damage']}</td></tr>";
-    $iColor -= 24;
+$sLifeHtml = '<div class="life_count_frame">';
+for ($i = 1 ; $i <= 4 ; $i++) {
+    $sLifeHtml .= "<div class='life_count'>プレーヤー$i ライフ：";
+    $sLifeHtml .= "<select>";
+    $sLifeHtml .= "<option selected>20</option>";
+    for ($j = 19 ; $j >= 0 ; $j--) {
+        $sLifeHtml .= "<option>$j</option>";
+    }
+    $sLifeHtml .= "</select>";
+    $sLifeHtml .= "<div class='life_bar'><div class='remain'></div></div>";
+    $sLifeHtml .= "</div>";
 }
+$sLifeHtml .= "</div>";
 
 ?>
 <!DOCTYPE html>
@@ -178,10 +166,12 @@ foreach ($aScore as $val) {
     自作ボードゲーム<a href="/2015/12/27/293/">「スピードコンボマスター」</a>で利用するコマンドカードコンソールです。
 </p>
 <div class="handle">
+    <!--
     <div>
         <button class="toggle_trump" style="background-color:rgb(20, 170, 255);">トランプで遊ぶ</button>
         <button class="toggle_trump" style="background-color:rgb(20, 170, 255);display:none;">コマンドに戻す</button>
     </div>
+    -->
     プレーヤー人数
     <select name="players">
         <option value="0">選択して下さい</option>
@@ -191,22 +181,37 @@ foreach ($aScore as $val) {
     </select>
     <br />
     &nbsp;<br />
+    <!--
     <button class="undo invalid">元に戻す</button>
     <button class="redo invalid">やり直し</button>
+    -->
 </div>
 <div id="game_board" style="display:none;">
+    <button class="shuffle_button">シャッフル</button>
     <div class="chara_set clearfix">
         <div class="card_list">
             <?=$sArtsHtml?>
         </div>
     </div>
 </div>
-<div>
-    <table class="combo_score">
-        <tr><th>発動コンボ数</th><th>ダメージ</th></tr>
-        <?=$sScoreHtml?>
-    </table>
+<div id="command_input_console">
+    <input type="hidden" id="combo_command" />
+    <ul id="command_list" class="clearfix">
+        <span class="placeholder" style="display:none;">ボタンを押してコマンド入力</span>
+    </ul>
+    <ul id="combo_list"></ul>
+    <button class="open_combo_list">+</button>
+    <div id="combo_damage" style="display:none;">[P][K][G][T]ボタンを押してコマンドを入力して下さい↓</div>
+    <button class="motion punch">P</button>
+    <button class="motion kick">K</button>
+    <button class="motion glove">G</button>
+    <button class="motion tackle">T</button>
+    <br />
+    <button class="delete_command_button">１つ消す</button>
+    <button class="delete_combo_button">全て消す</button>
+    <button class="combo_start_button">発動</button>
 </div>
+<?=$sLifeHtml?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="scm.js"></script>
 </body>
